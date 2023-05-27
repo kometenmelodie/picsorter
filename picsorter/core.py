@@ -1,6 +1,9 @@
 import datetime
 from pathlib import Path
 
+from rich import print as rprint
+from rich.progress import track
+
 
 def _get_creation_date(filename: Path) -> str:
     """Get time of most recent content modification (in seconds)
@@ -16,7 +19,7 @@ def _get_creation_date(filename: Path) -> str:
 
 
 def _rename_file(
-    filename: Path, append_old_name: bool = False, verbose: bool = True
+    filename: Path, append_old_name: bool = False, verbose: bool = False
 ) -> None:
     """Rename one file with its creation date."""
     creation_date = _get_creation_date(filename)
@@ -33,14 +36,23 @@ def _rename_file(
     filename.rename(new_file_name)
 
 
-def rename_multiple_files(folder: Path, file_extension: str = "jpg") -> None:
+def rename_multiple_files(
+    folder: Path, file_extension: str = "jpg", silent: bool = False
+) -> None:
     """Rename all files that match the file_extension
     within the given folder."""
     # iterate over all files within the specific folder
-    for file in list(folder.glob(f"*.{file_extension}")):
+    for file in track(
+        list(folder.glob(f"*.{file_extension}")),
+        description="Renaming files ...",
+        disable=silent,
+    ):
         file = Path(file)
         try:
             _rename_file(filename=file, append_old_name=False)
         except FileExistsError:
             # append old file name to prevent duplicates
             _rename_file(filename=file, append_old_name=True)
+
+    if not silent:
+        rprint(":sparkles: All Done!")
