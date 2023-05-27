@@ -12,6 +12,23 @@ typer = {extras = ["all"], version = "^0.9.0"}
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^3.3.2"
 
+[tool.ruff]
+select = [
+    # Pyflakes
+    "F",
+    # Pycodestyle
+    "E",
+    "W",
+    # isort
+    "I001"
+]
+line-length = 79
+target-version = "py310"
+
+[tool.black]
+line-length = 79
+target-version = ["py310"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
