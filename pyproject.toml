@@ -23,11 +23,14 @@ select = [
     "I001"
 ]
 line-length = 79
-target-version = "py310"
+target-version = "py311"
 
 [tool.black]
 line-length = 79
-target-version = ["py310"]
+target-version = ["py311"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
 
 [build-system]
 requires = ["poetry-core"]
